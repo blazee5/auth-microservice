@@ -9,5 +9,6 @@ db:
   host: "localhost"
   port: "5432"
   user: "postgres"
+  name: "auth"
   password: ""
-  ssl_mode: "false"
+  ssl_mode: "disable"
