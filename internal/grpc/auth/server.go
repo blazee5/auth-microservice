@@ -32,8 +32,8 @@ func (s *Server) SignUp(ctx context.Context, in *pb.SignUpRequest) (*pb.SignUpRe
 	return &pb.SignUpResponse{UserId: id}, nil
 }
 
-func (s *Server) SignIn(ctx context.Context, in *pb.SignInRequest) (*pb.SignInResponse, error) {
-	token, err := s.service.SignIn(ctx, in)
+func (s *Server) SignIn(ctx context.Context, in *pb.SignInRequest) (*pb.TokenResponse, error) {
+	tokens, err := s.service.SignIn(ctx, in)
 
 	if err != nil {
 		s.log.Log.Infof("error while sign in: %v", err)
@@ -41,5 +41,27 @@ func (s *Server) SignIn(ctx context.Context, in *pb.SignInRequest) (*pb.SignInRe
 		return nil, status.Error(codes.Internal, "server error")
 	}
 
-	return &pb.SignInResponse{Token: token}, nil
+	return &pb.TokenResponse{
+		AccessToken:  tokens.Access,
+		RefreshToken: tokens.Refresh,
+	}, nil
+}
+
+func (s *Server) RefreshToken(ctx context.Context, in *pb.TokenRequest) (*pb.TokenResponse, error) {
+	if in.GetRefreshToken() == "" {
+		return nil, status.Error(codes.Unauthenticated, "refresh token is required")
+	}
+
+	tokens, err := s.service.RefreshTokens(ctx, in)
+
+	if err != nil {
+		s.log.Log.Infof("error while sign in: %v", err)
+
+		return nil, status.Error(codes.Internal, "server error")
+	}
+
+	return &pb.TokenResponse{
+		AccessToken:  tokens.Access,
+		RefreshToken: tokens.Refresh,
+	}, nil
 }

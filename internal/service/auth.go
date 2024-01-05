@@ -22,13 +22,23 @@ func (s *AuthService) SignUp(ctx context.Context, in *pb.SignUpRequest) (string,
 	return s.repo.CreateUser(ctx, in)
 }
 
-func (s *AuthService) SignIn(ctx context.Context, in *pb.SignInRequest) (string, error) {
+func (s *AuthService) SignIn(ctx context.Context, in *pb.SignInRequest) (auth.Tokens, error) {
 	in.Password = auth.GenerateHashPassword(in.Password)
 	user, err := s.repo.ValidateUser(ctx, in.Email, in.Password)
 
 	if err != nil {
-		return "", err
+		return auth.Tokens{}, err
 	}
 
-	return auth.GenerateToken(user.ID)
+	return auth.GenerateTokens(user.ID)
+}
+
+func (s *AuthService) RefreshTokens(ctx context.Context, input *pb.TokenRequest) (auth.Tokens, error) {
+	userID, err := auth.ParseToken(input.RefreshToken)
+
+	if err != nil {
+		return auth.Tokens{}, err
+	}
+
+	return auth.GenerateTokens(userID)
 }
