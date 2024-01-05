@@ -11,7 +11,7 @@ const (
 	signingKey        = "b4e81c3a0d09874e5d71bf2a55b3c1e70f3d04a44c7c414bda872ef8f22a7b7f"
 	refreshSigningKey = "YxrN2XqOeEmruOT0XLLNZwPYe9bjXaUx"
 	accessTokenTTL    = 12 * time.Hour
-	refreshTokenTTL   = 12 * time.Hour
+	refreshTokenTTL   = 24 * time.Hour * 30
 	salt              = "7f2cbe9876a1a3cfe9952ebccda7e144"
 )
 
@@ -34,13 +34,21 @@ func GenerateTokens(userID string) (Tokens, error) {
 		userID,
 	})
 
+	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(refreshTokenTTL)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+		userID,
+	})
+
 	access, err := token.SignedString([]byte(signingKey))
 
 	if err != nil {
 		return Tokens{}, err
 	}
 
-	refresh, err := token.SignedString([]byte(refreshSigningKey))
+	refresh, err := refreshToken.SignedString([]byte(refreshSigningKey))
 
 	if err != nil {
 		return Tokens{}, err
