@@ -13,11 +13,11 @@ import (
 type Server struct {
 	log     *logger.Logger
 	service *service.Service
-	pb.UnimplementedAuthServer
+	pb.UnimplementedAuthServiceServer
 }
 
 func Register(log *logger.Logger, service *service.Service, server *grpc.Server) {
-	pb.RegisterAuthServer(server, &Server{log: log, service: service})
+	pb.RegisterAuthServiceServer(server, &Server{log: log, service: service})
 }
 
 func (s *Server) SignUp(ctx context.Context, in *pb.SignUpRequest) (*pb.SignUpResponse, error) {

@@ -3,7 +3,7 @@ module github.com/blazee5/auth-microservice
 go 1.21.5
 
 require (
-	github.com/blazee5/protos v0.0.3
+	github.com/blazee5/protos v0.0.4
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jackc/pgx/v5 v5.5.1
