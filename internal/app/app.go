@@ -49,7 +49,7 @@ func (a *App) Run() {
 
 	conn, err := grpc.DialContext(
 		context.Background(),
-		"0.0.0.0:"+a.cfg.Server.Port,
+		a.cfg.Server.Host+":"+a.cfg.Server.Port,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
