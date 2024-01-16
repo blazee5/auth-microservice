@@ -12,3 +12,7 @@ db:
   name: "auth"
   password: ""
   ssl_mode: "disable"
+
+redis:
+  host: "localhost:6379"
+  password: ""

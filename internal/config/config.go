@@ -9,6 +9,7 @@ type Config struct {
 	Env    string `yaml:"env"`
 	Server Server `yaml:"server"`
 	DB     DB     `yaml:"db"`
+	Redis  Redis  `yaml:"redis"`
 }
 
 type Server struct {
@@ -22,6 +23,11 @@ type DB struct {
 	Port     string `yaml:"port"`
 	Name     string `yaml:"name"`
 	SSLMode  string `yaml:"ssl_mode"`
+}
+
+type Redis struct {
+	Host     string `yaml:"host"`
+	Password string `yaml:"Password"`
 }
 
 func Load() *Config {
